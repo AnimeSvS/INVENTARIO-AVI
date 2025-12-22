@@ -79,8 +79,30 @@ function actualizarBotonesPaginacion(numItems) {
     btnNext.disabled = numItems < PAGE_SIZE;  // Deshabilitar el botón de "Siguiente" si no hay más registros
 }
 
+// En pagination.js, cachear resultados
+const cachePaginacion = new Map();
 
+async function cargarPaginaConCache(fecha, direccion, coleccion) {
+    const clave = `${fecha.toISOString().split('T')[0]}_${direccion}`;
+
+    if (cachePaginacion.has(clave)) {
+        return cachePaginacion.get(clave);
+    }
+
+    const datos = await cargarPaginaOriginal(fecha, direccion, coleccion);
+    cachePaginacion.set(clave, datos);
+
+    // Limpiar cache después de 5 minutos
+    setTimeout(() => cachePaginacion.delete(clave), 300000);
+
+    return datos;
+}
 // Cargar la primera página de registros cuando se inicia la aplicación
 window.addEventListener('load', () => {
     cargarPaginaRegistros(new Date(), 'primera'); // Llamar para cargar los primeros registros
 });
+// pagination.js - AGREGAR al final del archivo
+// Hacer funciones disponibles globalmente
+window.cargarPaginaRegistros = cargarPaginaRegistros;
+window.anteriorPagina = anteriorPagina;
+window.siguientePagina = siguientePagina;

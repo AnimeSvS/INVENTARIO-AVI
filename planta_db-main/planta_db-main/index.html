@@ -7,29 +7,175 @@
   <title>AVICRUZ SAC 🐓</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="assets/styles.css" rel="stylesheet" />
+  <!-- NUEVO: Agregar CSS de autenticación -->
+  <link href="assets/auth.css" rel="stylesheet" />
+  <!-- NUEVO: Agregar Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js plugin para autocolor -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 </head>
 
+
 <body>
+
+
+  <!-- <div id="appContent" class="d-none">  -->
   <nav class="navbar navbar-expand-lg mb-4 px-4">
     <a class="navbar-brand">INVENTARIO 🐓</a>
+    <!-- Botón Cerrar Sesión -->
+    <div class="ms-auto">
+      <button id="btnCerrarSesion" class="btn btn-outline-danger btn-sm">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+    <!-- Agregar en tu navbar o menú principal -->
+    <div id="adminMenu" class="d-none">
+      <button class="btn btn-primary" onclick="sistemaUsuarios.mostrarPanelGestionUsuarios()">
+        <i class="fas fa-users"></i> Gestión de Usuarios
+      </button>
+    </div>
   </nav>
 
   <div class="container">
+
+
+    <!--! clave admin  -->
+    <!--! 🔐 Panel de creación de usuarios (solo admin) clave admind -->
+
     <ul class="nav nav-tabs mb-4" id="tabMenu">
+
+      <li class="nav-item d-none" id="tabAdmin">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#admin">
+          <i class="fas fa-user-shield"></i> Admin
+        </button>
+      </li>
       <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab"
           data-bs-target="#registros">Registros</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#salidas">Salidas</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#salidas">Salidas</button>
+      </li>
+
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
           data-bs-target="#reporteTiendas">ReporteTiendas</button></li>
       <!-- <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tiendas">Tiendas</button></li> -->
+      <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inventario">
+          📦 Inventario
+        </button>
+      </li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
           data-bs-target="#eliminados">Eliminados</button></li>
 
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#dashboard">Dashboard</button>
-      </li>
+      <!-- <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tiendas">
+          🏪 Tiendas
+        </button>
+      </li> -->
+      <!-- inventario -->
+
     </ul>
 
     <div class="tab-content">
+      <!-- !admin -->
+      <!-- TAB ADMIN -->
+      <div class="tab-pane fade" id="admin">
+        <div class="card p-4">
+          <h4 class="text-danger mb-4"><i class="fas fa-users-cog"></i> Panel de Administración</h4>
+
+          <form id="formCrearUsuario" class="row g-3 needs-validation" novalidate>
+            <div class="col-md-3">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Contraseña</label>
+              <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Código</label>
+              <input type="text" name="codigoInvitacion" class="form-control" placeholder="Invitación" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Rol</label>
+              <select name="rol" class="form-select" required>
+                <option value="operador">Operador</option>
+                <option value="visor">Visor</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <!-- Permisos personalizados -->
+            <div class="col-12">
+              <h6>Permisos personalizados:</h6>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="ver" checked>
+                <label class="form-check-label">Ver</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="crear">
+                <label class="form-check-label">Crear</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="editar">
+                <label class="form-check-label">Editar</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="eliminar">
+                <label class="form-check-label">Eliminar</label>
+              </div>
+            </div>
+
+            <div class="col-12 text-end">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Crear Usuario
+              </button>
+            </div>
+          </form>
+
+          <!-- Lista de usuarios existentes -->
+          <hr class="my-4">
+          <h5>Usuarios Registrados</h5>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Email</th>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Ver</th>
+                  <th>Crear</th>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                  <th>Activo</th>
+                </tr>
+              </thead>
+              <tbody id="tablaUsuariosAdmin"></tbody>
+              <thead class="table-light">
+                <tr>
+                  <th>Email</th>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Ver</th>
+                  <th>Crear</th>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                  <th>Activo</th>
+                  <th>Acciones</th> <!-- Nueva columna -->
+                </tr>
+              </thead>
+              <tbody id="tablaUsuariosAdmin"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB REGISTROS -->
       <div class="tab-pane fade show active" id="registros">
         <div class="card p-4 mb-5">
@@ -85,8 +231,8 @@
             <div>
               <button class="btn btn-primary mt-3" id="btnBuscarFecha">Buscar</button>
               <button class="btn btn-secondary mt-3 ms-2" id="btnLimpiarBusqueda">🧹 Limpiar</button>
-              <button id="btnImprimir" class="btn btn-secondary mt-3 ms-3"
-                style="background-color: rebeccapurple; color: white;">🖨️ Imprimir Tabla</button>
+              <!-- <button id="btnImprimir" class="btn btn-secondary mt-3 ms-3"
+                style="background-color: rebeccapurple; color: white;">🖨️ Imprimir Tabla</button> -->
               <button id="btnExportarExcel" class="btn btn-secondary mt-3 ms-3"
                 style="background-color: rgb(63, 153, 51); color: white;">Exportar a XLS</button>
             </div>
@@ -139,22 +285,47 @@
           <form id="formSalida" class="row g-3 needs-validation" novalidate>
             <div class="col-md-3">
               <label class="form-label">CANTIDAD DE TINAS</label>
-              <input type="number" id="salidaJabas" class="form-control" min="1" required>
+              <select id="salidaJabas" class="form-select" required>
+                <option disabled selected>Seleccione</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+              </select>
+              <div class="invalid-feedback">Por favor seleccione una cantidad.</div>
             </div>
 
             <div class="col-md-3">
               <label class="form-label">POLLOS X TINA</label>
-              <input type="number" id="salidaPollosJaba" class="form-control" min="1" required>
+              <select id="salidaPollosJaba" class="form-select" required>
+                <option disabled selected>Seleccione</option>
+                <option>2</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+              </select>
+              <div class="invalid-feedback">Por favor seleccione una cantidad.</div>
             </div>
 
             <div class="col-md-3">
               <label class="form-label">PESO X TINA (kg)</label>
-              <input type="number" id="salidaPeso" class="form-control" step="0.01" min="0.01" required>
+              <input type="number" id="salidaPesoPorTina" class="form-control" step="0.01" min="0.01" required>
+              <div class="invalid-feedback">Por favor ingrese un peso válido.</div>
             </div>
+
             <div class="col-md-3">
               <label class="form-label">PESO BRUTO (kg)</label>
-              <input type="number" id="salidaPeso" class="form-control" step="0.01" min="0.01" required>
+              <input type="number" id="salidaPesoBruto" class="form-control" step="0.01" min="0.01" required>
+              <div class="invalid-feedback">Por favor ingrese un peso válido.</div>
             </div>
+
+            <!-- El resto del formulario permanece igual -->
             <div class="col-md-3">
               <label class="form-label">DESTINO / SEDE</label>
               <select id="salidaDestino" class="form-select" required>
@@ -180,19 +351,38 @@
               <button type="submit" class="btn btn-danger btn-lg">
                 REGISTRAR SALIDA
               </button>
+              <!--! usar en emergencia -->
+              <!-- <button onclick="depurarBusquedaSalidas()" class="btn btn-info btn-sm mt-2">
+                🔧 Depurar Búsqueda
+              </button> -->
             </div>
           </form>
         </div>
 
         <div class="card p-4">
           <h5>Historial de Salidas</h5>
+          <!-- En la sección SALIDAS, después de <h5>Historial de Salidas</h5> -->
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="input-group" style="max-width:250px;">
+              <span class="input-group-text">📅</span>
+              <input type="date" id="buscarFechaSalidas" class="form-control" />
+            </div>
+            <div>
+              <button class="btn btn-primary mt-3" id="btnBuscarFechaSalidas">Buscar</button>
+              <button class="btn btn-secondary mt-3 ms-2" id="btnLimpiarBusquedaSalidas">🧹 Limpiar</button>
+              <button id="btnExportarExcelSalidas" class="btn btn-secondary mt-3 ms-3"
+                style="background-color: rgb(63, 153, 51); color: white;">Exportar a XLS</button>
+            </div>
+          </div>
+
+
           <table class="table table-bordered text-center align-middle">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Fecha y Hora</th>
                 <th>Producto</th>
-                <th>Jabas</th>
+                <th>Tinas</th>
                 <th>Kg/Tina</th>
                 <th>Total Tinas</th>
                 <th>Pollos/Tina</th>
@@ -206,9 +396,134 @@
             </thead>
             <tbody id="tablaSalidas"></tbody>
           </table>
+          <!-- NAVEGACIÓN DE PÁGINAS - Agregar después de la tabla -->
+          <nav aria-label="Paginación de salidas" class="my-3 d-flex justify-content-center">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" id="liPaginaAnteriorSalidas">
+                <button class="page-link" id="btnPaginaAnteriorSalidas" onclick="anteriorPaginaSalidas()" tabindex="-1"
+                  aria-disabled="true">
+                  ⬅️ Anterior
+                </button>
+              </li>
+              <li class="page-item" id="liPaginaSiguienteSalidas">
+                <button class="page-link" id="btnPaginaSiguienteSalidas" onclick="siguientePaginaSalidas()">Siguiente
+                  ➡️</button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
       <!-- salidas--------------------- -->
+
+      <!-- MODAL EDITAR SALIDA -->
+      <div class="modal fade" id="editSalidaModal" tabindex="-1" role="dialog" aria-labelledby="editSalidaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+              <h5 class="modal-title" id="editSalidaModalLabel">Editar Salida</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="formEditSalida" class="needs-validation" novalidate>
+              <div class="modal-body">
+                <input type="hidden" id="editSalidaId">
+                <div class="mb-3">
+                  <label class="form-label">Fecha y Hora</label>
+                  <input type="text" id="editSalidaFecha" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Producto</label>
+                  <input type="text" id="editSalidaProducto" class="form-control" value="POLLO BENEFICIADO" readonly>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label class="form-label">CANTIDAD DE TINAS</label>
+                    <select id="editSalidaTinas" class="form-select" required>
+                      <option disabled>Seleccione</option>
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor seleccione una cantidad.</div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">POLLOS X TINA</label>
+                    <select id="editSalidaPollosPorTina" class="form-select" required>
+                      <option disabled>Seleccione</option>
+                      <option>2</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                      <option>10</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor seleccione una cantidad.</div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">PESO X TINA (kg)</label>
+                    <input type="number" id="editSalidaPesoTina" class="form-control" step="0.01" min="0.01" required>
+                    <div class="invalid-feedback">Por favor ingrese un peso válido.</div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">PESO BRUTO (kg)</label>
+                    <input type="number" id="editSalidaPesoBruto" class="form-control" step="0.01" min="0.01" required>
+                    <div class="invalid-feedback">Por favor ingrese un peso válido.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">DESTINO / SEDE</label>
+                    <select id="editSalidaDestino" class="form-select" required>
+                      <option disabled>Seleccione</option>
+                      <option>MARIANO MELGAR</option>
+                      <option>PAUCARPATA</option>
+                      <option>MIRAFLORES</option>
+                      <option>SOCABAYA</option>
+                      <option>CAYMA</option>
+                      <option>ALTO SELVA ALEGRE</option>
+                      <option>AVELINO (PRINCIPAL)</option>
+                      <option>COLON</option>
+                      <option value="OTRO">OTROS</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 d-none" id="editOtroDestinoDiv">
+                    <label class="form-label">OTRO DESTINO</label>
+                    <input type="text" id="editOtroDestino" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL CONFIRMAR ELIMINAR SALIDA -->
+      <div class="modal fade" id="confirmEliminarSalidaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content p-4">
+            <h5 class="modal-title mb-3 text-danger">Confirmar Eliminación</h5>
+            <p>¿Está seguro de eliminar esta salida?</p>
+            <p><strong>ID:</strong> <span id="confirmSalidaId"></span></p>
+            <p><strong>Tienda:</strong> <span id="confirmSalidaTienda"></span></p>
+            <p><strong>Total Pollos:</strong> <span id="confirmSalidaPollos"></span></p>
+            <p><strong>Peso Neto:</strong> <span id="confirmSalidaPeso"></span> KG</p>
+            <p class="text-danger"><small>Este cambio no se puede deshacer.</small></p>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" id="btnConfirmEliminarSalida">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <!-- TAB ELIMINADOS -->
       <div class="tab-pane fade" id="eliminados">
         <div class="card p-4">
@@ -242,6 +557,16 @@
         <div class="card p-4 mb-4">
           <h4 class="text-success mb-3">REPORTE POR TIENDA 🏪</h4>
 
+          <!--! <div class="row mb-3">
+    <div class="col-md-4">
+        <label class="form-label">FECHA INICIO</label>
+        <input type="date" id="reporteFechaInicio" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">FECHA FIN</label>
+        <input type="date" id="reporteFechaFin" class="form-control">
+    </div>
+</div> !-->
           <!-- FORMULARIO -->
           <form id="formReporteTiendas" class="row g-3 needs-validation" novalidate>
 
@@ -278,8 +603,16 @@
 
         <!-- TABLA -->
         <div class="card p-4">
-          <h5 class="text-secondary mb-3">Resumen de Salidas</h5>
 
+          <!-- Reemplazar el botón existente por este -->
+          <div class="d-flex justify-content-end gap-2 mb-3">
+            <button id="btnExportarReporteExcel" class="btn btn-success btn-sm">
+              <span>📊 Exportar a Excel</span>
+            </button>
+            <button onclick="exportarReporteTiendasCSV()" class="btn btn-secondary btn-sm">
+              <span>📄 Exportar a CSV</span>
+            </button>
+          </div>
           <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle">
               <thead class="table-light">
@@ -303,36 +636,259 @@
       </div>
       <!-- reporte de tiendas -->
 
-      <!-- TAB DASHBOARD -->
-      <div class="tab-pane fade" id="dashboard">
+      <!-- TAB TIENDAS -->
+      <!-- Contenido de la pestaña -->
+      <div class="tab-pane fade" id="tiendas">
         <div class="card p-4">
-          <h4 class="text-info mb-3">Dashboard de Inventario</h4>
-          <div class="row mb-3">
-            <div class="col">
-              <div class="card text-center">
-                <h5>Total Pollos en Stock</h5>
-                <h3 id="totalPollos">0</h3>
+          <h4 class="mb-3">Gestión de Tiendas</h4>
+
+          <!-- Formulario para agregar tienda -->
+          <form id="formTienda" class="row g-3 mb-4">
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="Nombre de la tienda" required>
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Dirección">
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary w-100">Agregar</button>
+            </div>
+          </form>
+
+          <!-- Lista de tiendas -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaTiendas"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB INVENTARIO -->
+      <!-- TAB INVENTARIO -->
+      <!-- TAB INVENTARIO POR FECHA -->
+      <div class="tab-pane fade" id="inventario">
+        <div class="card p-4 mb-4">
+          <h4 class="text-info mb-4">📦 INVENTARIO POR FECHA</h4>
+
+          <!-- Controles de fecha y precio -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="input-group">
+                <button class="btn btn-outline-primary" onclick="fechaInventarioAnterior()" title="Día anterior">
+                  ⬅️
+                </button>
+                <input type="date" id="fechaInventario" class="form-control text-center"
+                  onchange="irAFechaInventario()">
+                <button class="btn btn-outline-primary" onclick="fechaInventarioSiguiente()" title="Día siguiente">
+                  ➡️
+                </button>
+              </div>
+              <small class="text-muted mt-1 d-block">Selecciona una fecha para ver el inventario</small>
+            </div>
+            <div class="col-md-6 text-end">
+              <div class="d-flex align-items-center justify-content-end">
+                <span class="me-3 text-muted">Precio: <strong>S/ <span id="precioActual">8.50</span> x
+                    kg</strong></span>
+                <button onclick="mostrarModalPrecio()" class="btn btn-outline-warning btn-sm">
+                  ✏️ Editar
+                </button>
               </div>
             </div>
-            <div class="col">
-              <div class="card text-center">
-                <h5>Peso Total Neto</h5>
-                <h3 id="totalPeso">0 KG</h3>
+          </div>
+
+          <!-- KPIs principales -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="card text-center border-primary shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">🐓 TOTAL POLLOS</h6>
+                  <h3 id="inventarioTotalPollos" class="text-primary">0</h3>
+                  <small class="text-muted">Stock actual</small>
+                  <div class="mt-2">
+                    <small id="variacionPollos" class="text-success">+0% vs ayer</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center border-success shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">⚖️ PESO TOTAL</h6>
+                  <h3 id="inventarioPesoTotal" class="text-success">0 KG</h3>
+                  <small class="text-muted">En existencia</small>
+                  <div class="mt-2">
+                    <small id="variacionPeso" class="text-success">+0% vs ayer</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center border-warning shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">📊 VALOR ESTIMADO</h6>
+                  <h3 id="inventarioValor" class="text-warning">S/ 0.00</h3>
+                  <small class="text-muted">A S/ <span id="precioDisplay">8.50</span> x kg</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas detalladas -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card h-100">
+                <div class="card-header bg-light">
+                  <h6 class="mb-0">📈 MOVIMIENTOS DEL DÍA</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h5 class="text-success" id="ingresosDia">0</h5>
+                      <small>Ingresos</small>
+                    </div>
+                    <div class="col-6">
+                      <h5 class="text-danger" id="salidasDia">0</h5>
+                      <small>Salidas</small>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <small class="text-muted">Fecha: <span id="fechaDisplay">--/--/----</span></small>
+                  </div>
+                  <div class="mt-1">
+                    <small class="text-muted">Última actualización: <span id="ultimaActualizacion">--:--</span></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card h-100">
+                <div class="card-header bg-light">
+                  <h6 class="mb-0">📊 PROMEDIOS DEL DÍA</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h5 id="promedioPeso">0.000</h5>
+                      <small>Kg por pollo</small>
+                    </div>
+                    <div class="col-6">
+                      <h5 id="promedioPollos">0.0</h5>
+                      <small>Pollos x movimiento</small>
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <small class="text-muted" id="totalMovimientos">0 movimientos registrados</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="d-flex justify-content-end mb-3 gap-2">
+            <button onclick="irAFechaInventario()" class="btn btn-primary btn-sm">
+              <span>🔍 Ver Fecha</span>
+            </button>
+            <button onclick="exportarInventarioFechaExcel()" class="btn btn-success btn-sm">
+              <span>📊 Exportar Excel</span>
+            </button>
+            <button onclick="cargarInventarioFechaHoy()" class="btn btn-secondary btn-sm">
+              <span>🔄 Hoy</span>
+            </button>
+          </div>
+
+          <!-- Tabla detallada de productos -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>PRODUCTO</th>
+                  <th>STOCK (POLLOS)</th>
+                  <th>PESO (KG)</th>
+                  <th>VALOR ESTIMADO</th>
+                  <th>FECHA</th>
+                  <th>ESTADO</th>
+                </tr>
+              </thead>
+              <tbody id="tablaInventario">
+                <tr>
+                  <td colspan="6" class="text-center text-muted">
+                    Selecciona una fecha para cargar el inventario
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Resumen por tiendas -->
+          <div class="card mt-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <h6 class="mb-0">🏪 DISTRIBUCIÓN POR TIENDA (FECHA SELECCIONADA)</h6>
+              <small class="text-muted" id="totalDistribucion">0 tiendas</small>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>TIENDA</th>
+                      <th>POLLOS ENVIADOS</th>
+                      <th>PESO TOTAL</th>
+                      <th>ENVÍOS</th>
+                      <th>ÚLTIMO ENVÍO</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaDistribucionTiendas">
+                    <tr>
+                      <td colspan="5" class="text-center text-muted">
+                        No hay distribuciones para esta fecha
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumen de evolución -->
+          <div class="card mt-4">
+            <div class="card-header bg-light">
+              <h6 class="mb-0">📈 EVOLUCIÓN RECIENTE</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <small class="text-muted">Stock hace 7 días:</small>
+                  <div class="d-flex justify-content-between">
+                    <span id="stockHace7DiasPollos">0 pollos</span>
+                    <span id="stockHace7DiasPeso">0 kg</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Variación semanal:</small>
+                  <div id="variacionSemanal" class="text-success">+0%</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- dashboard -->
     </div>
   </div>
   <!-- MODAL EDITAR -->
-  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header bg-warning text-dark">
-          <h5 class="modal-title">Editar Registro</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title" id="editModalLabel">Editar Registro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <form id="formEdit" class="needs-validation" novalidate>
           <div class="modal-body">
@@ -385,7 +941,61 @@
       </div>
     </div>
   </div>
+  <!-- MODAL EDITAR USUARIO -->
+  <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-dark">
+          <h5 class="modal-title">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formEditarUsuario" class="row g-3 p-3">
+          <input type="hidden" name="emailOriginal" id="emailOriginal">
 
+          <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Nombre</label>
+            <input type="text" name="nombre" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Rol</label>
+            <select name="rol" class="form-select" required>
+              <option value="operador">Operador</option>
+              <option value="visor">Visor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <h6>Permisos:</h6>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="ver" id="editVer">
+              <label class="form-check-label">Ver</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="crear" id="editCrear">
+              <label class="form-check-label">Crear</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="editar" id="editEditar">
+              <label class="form-check-label">Editar</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="eliminar" id="editEliminar">
+              <label class="form-check-label">Eliminar</label>
+            </div>
+          </div>
+
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <!-- FOOTER -->
   <footer style="text-align: center; padding: 15px; font-size: 14px; color: #666;">
     © <span id="añoActual"></span> <strong>SedyGames</strong>. Todos los derechos reservados.
@@ -398,23 +1008,84 @@
   </script>
 
   <!-- SCRIPTS -->
-  <!-- Firebase -->
+  <!-- SCRIPTS - ORDEN CORREGIDO -->
+  <!-- scripts al final, después de todo el HTML visible -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="assets/firebase-config.js"></script>
-
-  <!-- Archivos JavaScript modulares -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  
+  <script src="js/auth-system.js"></script>
+  <script src="js/admin-secret.js"></script>
+  <script src="js/user-creation.js"></script>
+  <script src="js/admin-init.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utilitarios.js"></script>
   <script src="js/firestore.js"></script>
   <script src="js/table.js"></script>
-  <script src="js/form.js"></script>
   <script src="js/modal.js"></script>
+  <script src="js/modal-salida.js"></script>
   <script src="js/pagination.js"></script>
+  <script src="js/pagination-salidas.js"></script>
+  <script src="js/exportaciones-unificadas.js"></script>
+  <script src="js/event-manager.js"></script>
+  <script src="js/reporte-tiendas.js"></script>
+  <script src="js/inventario.js"></script>
+  <script src="js/inicializacion.js"></script>
   <script src="js/main.js"></script>
+  
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- delegación segura para formulario de admin -->
+  <script>
+    document.addEventListener('submit', async e => {
+      if (e.target && e.target.id === 'formCrearUsuario') {
+        e.preventDefault();
+        const [email, nombre, password, codigo] = e.target;
+        await crearUsuarioConInvitacion(email.value, nombre.value, password.value, codigo.value);
+        e.target.reset();
+      }
+    });
+  </script>
+  <script>
+    // Muestra la pestaña Admin si el usuario es admin
+    document.addEventListener('DOMContentLoaded', () => {
+      const u = JSON.parse(localStorage.getItem('usuario_actual') || '{}');
+      const tab = document.getElementById('tabAdmin');
+      if (u.rol === 'admin' && tab) {
+        tab.classList.remove('d-none'); // ✅ quita la clase que lo oculta
+      }
+    });
+
+    // Fuerza cerrar sesión con click directo
+    document.addEventListener('click', e => {
+      if (e.target && e.target.id === 'btnCerrarSesion') {
+        e.preventDefault();
+        localStorage.removeItem('usuario_actual');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+  <script>
+    // Actualizar año en footer
+    document.getElementById("añoActual").textContent = new Date().getFullYear();
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      aplicarPermisosUsuario();
+    });
+  </script>
+
+<script>
+  // Mostrar panel de crear usuario solo si es admin
+  document.addEventListener('DOMContentLoaded', () => {
+    const u = JSON.parse(localStorage.getItem('usuario_actual') || '{}');
+    const panel = document.getElementById('panelCrearUsuario');
+    if (u.rol === 'admin' && panel) {
+      panel.classList.remove('d-none');
+    }
+  });
+</script>
+
 </body>
-
-</html>

@@ -1,67 +1,29 @@
-// main.js
+// main.js - VERSIÓN SIMPLIFICADA
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        console.log('🚀 Inicializando aplicación...');
 
-document.getElementById('btnLimpiarBusqueda').addEventListener('click', () => {
-    document.getElementById('buscarFecha').value = '';
-    cargarDatosInicial();
-});
-
-document.getElementById('btnImprimir').addEventListener('click', () => {
-    imprimirResumen('tablaRegistros');
-});
-
-document.getElementById('btnExportarExcel').addEventListener('click', () => {
-    exportarDatosDiaAXLS();
-});
-
-document.getElementById('btnBuscarFecha').addEventListener('click', () => {
-    const fechaStr = document.getElementById('buscarFecha').value;
-    if (!fechaStr) {
-        alert('Seleccione una fecha para buscar');
-        return;
-    }
-    const fecha = fechaInputADate(fechaStr);
-    cargarPaginaRegistros(fecha, 'primera'); // Llamamos a cargar los registros desde la fecha seleccionada
-    cargarDatosPorDia(fecha, 'eliminados', 'tablaEliminados');  // Opcional: Si tienes que cargar eliminados
-});
-document.getElementById('formReporteTiendas')
-    ?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const fecha = document.getElementById('reporteFecha').value;
-        const tienda = document.getElementById('reporteTienda').value;
-
-        if (!fecha) {
-            alert('Seleccione una fecha');
-            return;
+        // Inicializar gestor de eventos
+        if (typeof eventManager !== 'undefined') {
+            eventManager.init();
         }
 
-        await mostrarReporteTiendas(new Date(fecha), tienda);
-    });
+        // Inicializar sistema
+        if (typeof inicializarSistema === 'function') {
+            await inicializarSistema();
+        }
 
-async function cargarDashboard() {
-    const { totalPollos, totalPeso } = await obtenerTotalesDashboard();
-    document.getElementById('totalPollos').textContent = totalPollos;
-    document.getElementById('totalPeso').textContent = totalPeso.toFixed(2) + ' KG';
-}
+        // Cargar inventario si está en la pestaña activa
+        if (document.getElementById('inventario').classList.contains('active')) {
+            if (typeof inicializarInventario === 'function') {
+                setTimeout(() => inicializarInventario(), 500);
+            }
+        }
 
+        console.log('✅ Aplicación inicializada');
 
-window.addEventListener('load', () => {
-    cargarDashboard();
-});
-
-document.getElementById('btnVerReporte').addEventListener('click', async () => {
-    const fecha = document.getElementById('fechaReporte').value;
-    if (!fecha) {
-        alert('Por favor seleccione una fecha.');
-        return;
+    } catch (error) {
+        console.error('❌ Error al inicializar aplicación:', error);
+        eventManager?.showToast('Error al inicializar aplicación', 'error');
     }
-
-    const fechaObj = new Date(fecha);
-    await mostrarReporteTiendas(fechaObj);
-});
-window.addEventListener('load', () => {
-    verificarStockBajo();
-});
-window.addEventListener('load', () => {
-    cargarDashboard();
 });

@@ -1,21 +1,73 @@
-// Configuración Firebase - reemplaza con tus datos reales
+// assets/firebase-config.js
+// CONFIGURACIÓN CORREGIDA
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAb0kC6vTC8Q0eBGrVhGZY9l7CWwbWnvXg",
-    authDomain: "dbplanta-c2765.firebaseapp.com",
-    projectId: "dbplanta-c2765",
-    storageBucket: "dbplanta-c2765.firebasestorage.app",
-    messagingSenderId: "850319453145",
-    appId: "1:850319453145:web:9735a868c9f8b7a56d87c8"
+    apiKey: "AIzaSyC89hbHrHZW6-wqzEb4b0JfPbuqK5xjTqA",
+    authDomain: "navidad-98236.firebaseapp.com",
+    projectId: "navidad-98236",
+    storageBucket: "navidad-98236.firebasestorage.app",
+    messagingSenderId: "970059975348",
+    appId: "1:970059975348:web:fa4ee3da24be222af965e1",
 };
 
-firebase.initializeApp(firebaseConfig);
-if (!firebase.apps.length) {
+// Inicializar Firebase
+try {
     firebase.initializeApp(firebaseConfig);
+    console.log('✅ Firebase inicializado correctamente');
+} catch (error) {
+    console.error('❌ Error inicializando Firebase:', error);
 }
-const db = firebase.firestore();
 
-// Esperar que el DOM esté listo para luego cargar los datos
-document.addEventListener('DOMContentLoaded', () => {
+// Exportar referencias con verificación
+const db = firebase.firestore ? firebase.firestore() : null;
+const auth = firebase.auth ? firebase.auth() : null;
+
+if (!db) {
+    console.error('❌ Firestore no está disponible');
+}
+
+if (!auth) {
+    console.warn('⚠️ Auth no está disponible (puede ser normal si no lo necesitas)');
+}
+
+// Hacer disponibles globalmente
+window.db = db;
+window.auth = auth;
+window.firebase = firebase;
+
+
+
+// Cargar datos cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM listo, cargando datos...');
-    cargarDatosInicial().then(() => console.log('Datos cargados'));
+
+    // Verificar que Firebase esté funcionando
+    if (db) {
+        console.log('✅ Firestore listo');
+    } else {
+        console.error('❌ Firestore no disponible');
+    }
+
+    if (auth) {
+        console.log('✅ Auth listo');
+    }
 });
+if (db) {
+    db.settings({
+        experimentalForceLongPolling: true
+    });
+}
+
+// Configurar persistencia
+// Persistencia offline
+if (db && db.enablePersistence) {
+    db.enablePersistence()
+        .then(() => console.log('✅ Persistencia habilitada'))
+        .catch((err) => {
+            if (err.code === 'failed-precondition') {
+                console.warn('⚠️ Múltiples pestañas abiertas');
+            } else if (err.code === 'unimplemented') {
+                console.warn('⚠️ Persistencia no soportada');
+            }
+        });
+}
