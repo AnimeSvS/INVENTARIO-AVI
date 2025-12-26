@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AVICRUZ SAC - Sistema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/auth.css" />
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <span class="navbar-brand">🐔 AVICRUZ SAC</span>
+            <div class="ms-auto d-flex align-items-center gap-3 text-white">
+                <span id="userName">Usuario</span>
+                <button id="btnCerrarSesion" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <ul class="nav nav-tabs" id="tabMenu">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ingresos">Ingresos</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#salidas">Salidas</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#devoluciones">Devoluciones</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inventario">Inventario</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reporteTiendas">Reporte Tiendas</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#eliminados">Eliminados</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analitica">Analítica</button>
+            </li>
+            <li class="nav-item d-none" id="tabAdmin">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#admin">Admin</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4">
+            <!-- INGRESOS -->
+            <div class="tab-pane fade show active" id="ingresos"></div>
+
+            <!-- SALIDAS -->
+            <div class="tab-pane fade" id="salidas"></div>
+
+            <!-- DEVOLUCIONES -->
+            <div class="tab-pane fade" id="devoluciones"></div>
+
+            <!-- INVENTARIO -->
+            <div class="tab-pane fade" id="inventario"></div>
+
+            <!-- REPORTE TIENDAS -->
+            <div class="tab-pane fade" id="reporteTiendas"></div>
+
+            <!-- ELIMINADOS -->
+            <div class="tab-pane fade" id="eliminados"></div>
+
+            <!-- ANALÍTICA -->
+            <div class="tab-pane fade" id="analitica"></div>
+
+            <!-- ADMIN -->
+            <div class="tab-pane fade" id="admin"></div>
+        </div>
+    </div>
+
+    <footer>
+        © <span id="añoActual"></span> <strong>SedyGames</strong>. Todos los derechos reservados. · <a
+            href="terminos.html" class="text-light">Términos de Uso</a>
+    </footer>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- CORE -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <!-- AUTH -->
+    <script src="assets/js/auth/auth-system.js"></script>
+    <script src="assets/js/auth/admin-users.js"></script>
+
+    <!-- INGRESOS -->
+    <script src="assets/js/ingresos/ingresos-form.js"></script>
+    <script src="assets/js/ingresos/ingresos-table.js"></script>
+    <script src="assets/js/ingresos/ingresos-export.js"></script>
+    <script src="assets/js/ingresos/ingresos-cierre.js"></script>
+
+    <!-- SALIDAS -->
+
+    <script src="assets/js/salidas/salidas-table.js"></script>
+    <script src="assets/js/salidas/salidas-form.js"></script>
+    <script src="assets/js/salidas/salidas-export.js"></script>
+    <script src="assets/js/salidas/salidas-devoluciones.js"></script>
+
+    <!-- INVENTARIO -->
+    <script src="assets/js/inventario/inventario-stock.js"></script>
+    <script src="assets/js/inventario/inventario-general.js"></script>
+    <script src="assets/js/inventario/inventario-movimientos.js"></script>
+    <script src="assets/js/inventario/inventario-export.js"></script>
+
+    <!-- REPORTES -->
+    <script src="assets/js/reportes/reporte-tiendas.js"></script>
+    <script src="assets/js/reportes/reporte-eliminados.js"></script>
+    <script src="assets/js/reportes/reporte-analitica.js"></script>
+
+    <!-- MODALS -->
+    <script src="assets/js/modals/modal-confirm.js"></script>
+    <script src="assets/js/modals/modal-editar.js"></script>
+    <script src="assets/js/modals/modal-precio.js"></script>
+
+    <!-- UTILS -->
+    <script src="assets/js/utils/formatters.js"></script>
+    <script src="assets/js/utils/validaciones.js"></script>
+    <script src="assets/js/utils/notificaciones.js"></script>
+    <script src="assets/js/utils/paginacion.js"></script>
+
+    <!-- UI -->
+    <script src="assets/js/ui/loading.js"></script>
+    <script src="assets/js/ui/animations.js"></script>
+    <script src="assets/js/ui/footer.js"></script>
+
+</body>
+
+</html>

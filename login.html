@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AVICRUZ SAC - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/login-styles.css" />
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo-container">
+                        <div class="logo-icon">🐔</div>
+                        <h1 class="logo-text">AVICRUZ SAC</h1>
+                        <p class="logo-subtitle">Sistema de Gestión Avícola</p>
+                    </div>
+                </div>
+                <div class="login-body">
+                    <form id="loginForm" class="secure-form" novalidate>
+                        <div class="form-group">
+                            <input type="text" id="loginUser" class="form-control" placeholder="Usuario" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="loginPass" class="form-control" placeholder="Contraseña"
+                                required />
+                        </div>
+                        <button type="submit" class="btn btn-login">Iniciar Sesión</button>
+                    </form>
+                </div>
+                <footer class="login-footer">
+                    <p>© <span id="añoActual"></span> <strong>SedyGames</strong>. Todos los derechos reservados.</p>
+                    <p><a href="terminos.html">Términos de Uso</a></p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth/login.js"></script>
+</body>
+
+</html>
