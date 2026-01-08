@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     cargarEliminados();
                     break;
                 case '#analitica':
-                    cargarAnalitica();
+                    // cargarAnalitica();
                     break;
                 case '#admin':
                     cargarUsuariosAdmin();
